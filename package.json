@@ -10,5 +10,8 @@
     "test"
   ],
   "author": "Johan Andersson",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "coffee-script": "^1.8.0"
+  }
 }
