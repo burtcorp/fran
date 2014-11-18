@@ -12,6 +12,11 @@
   "author": "Johan Andersson",
   "license": "MIT",
   "dependencies": {
-    "coffee-script": "^1.8.0"
+    "coffee-script": "^1.8.0",
+    "commander": "^2.5.0",
+    "express": "^4.10.2",
+    "jade": "^1.7.0",
+    "wd": "^0.3.11",
+    "when": "^3.6.3"
   }
 }
