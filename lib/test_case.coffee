@@ -19,7 +19,7 @@ module.exports = (name) ->
   app = express()
   app.use express.static(publicPath)
   app.get '/', (req, res) ->
-    res.render publicPath + '/index'
+    res.render publicPath + '/index', name: name
   app.locals.basedir = Project.viewsPath
 
   browser = undefined
