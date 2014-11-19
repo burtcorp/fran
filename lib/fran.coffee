@@ -1,5 +1,3 @@
-require('jade')
-
 w = require('when')
 express = require('express')
 
@@ -15,9 +13,6 @@ module.exports = () ->
 
   start: ->
     app.use express.static(Project.publicPath)
-
-    app.set('views', Project.viewsPath)
-    app.set('view engine', 'jade')
 
     w.all Config.ports.map (port) ->
       w.promise (resolve, reject) ->
