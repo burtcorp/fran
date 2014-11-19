@@ -14,12 +14,13 @@ module.exports = (name) ->
 
   history = {}
 
-  publicPath = path.join(Project.featuresPath, name, 'public')
+  project = Project(name)
 
   app = express()
-  app.use express.static(publicPath)
+  app.use express.static(project.publicPath)
+  app.set('views', project.viewsPath)
   app.get '/', (req, res) ->
-    res.render publicPath + '/index', name: name
+    res.render 'index', name: name
   app.locals.basedir = Project.viewsPath
 
   browser = undefined
