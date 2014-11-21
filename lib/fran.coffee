@@ -10,9 +10,26 @@ module.exports = () ->
 
   modules = []
   servers = []
+  testCases = []
+
+  stop = ->
+    promises = []
+
+    servers.forEach (server) ->
+      promises.push w.promise (resolve, reject) ->
+        server.close(resolve)
+
+    testCases.forEach (testCase) ->
+      promises.push w.promise (resolve, reject) ->
+        testCase.stop().then(resolve)
+
+    w.all(promises)
 
   start: ->
     app.use express.static(Project.publicPath)
+
+    process.on 'SIGINT', ->
+      stop().then(process.exit)
 
     w.all Config.ports.map (port) ->
       w.promise (resolve, reject) ->
@@ -21,14 +38,12 @@ module.exports = () ->
   use: (module) ->
     modules.push(module)
 
-  stop: ->
-    w.all servers.map (server) ->
-      w.promise (resolve, reject) ->
-        server.close(resolve)
+  stop: stop
 
   load: (name) ->
     testCase = TestCase(name)
     testCase.mount(app)
+    testCases.push(testCase)
 
     modules.forEach (module) ->
       testCase.use(module)
