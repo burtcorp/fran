@@ -29,6 +29,8 @@ module.exports = (name) ->
 
   app: app
 
+  project: project
+
   mount: (server) ->
     server.use '/' + token, app
 
