@@ -5,7 +5,7 @@ Config = require('./config')
 Project = require('./project')
 TestCase = require('./test_case')
 
-module.exports = () ->
+module.exports = ->
   app = express()
 
   modules = []
