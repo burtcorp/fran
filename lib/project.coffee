@@ -1,7 +1,9 @@
 path = require('path')
 
+Config = require('./config')
+
 rootPath = process.cwd()
-franPath = path.join(rootPath, 'test', 'fran')
+franPath = Config.franPath
 viewsPath = path.join(franPath, 'views')
 publicPath = path.join(franPath, 'public')
 supportPath = path.join(franPath, 'support')
@@ -10,6 +12,7 @@ featuresPath = path.join(franPath, 'features')
 Project = (name) ->
   rootPath = path.join(featuresPath, name)
 
+  appPath: path.join(rootPath, 'app')
   viewsPath: path.join(rootPath, 'views')
   publicPath: path.join(rootPath, 'public')
 
