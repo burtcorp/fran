@@ -41,12 +41,19 @@ module.exports = (name) ->
   start: ->
     w.promise (resolve, reject) ->
       browser = wd.remote()
-      browser.init browserName: Config.browserName, ->
-        browser.get 'http://localhost:' + Config.ports[0] + '/' + token, resolve
+      browser.init browserName: Config.browserName, (err) ->
+        if err
+          reject(err.message)
+        else
+          browser.get 'http://localhost:' + Config.ports[0] + '/' + token, resolve
 
   stop: ->
     w.promise (resolve, reject) ->
-      browser.quit(resolve)
+      browser.quit (err) ->
+        if err
+          reject(err.message)
+        else
+          resolve()
 
   on: (event, callback) ->
     (history[event] || []).forEach (args) ->
