@@ -1,51 +1,30 @@
-w = require('when')
-express = require('express')
+path = require('path')
 
-Config = require('./config')
-Project = require('./project')
-TestCase = require('./test_case')
+Factory = require('./factory')
 
-module.exports = ->
-  app = express()
+module.exports = (options = {}) ->
+  if process.env['FRAN_SAUCE'] == '0'
+    options.sauce = false
+  else
+    options.sauce =
+      username: process.env['SAUCE_USERNAME']
+      apiKey: process.env['SAUCE_API_KEY']
 
-  modules = []
-  servers = []
-  testCases = []
+  options.ports =
+    if franPorts = process.env['FRAN_PORT']
+      franPorts.split(',').map(Number)
+    else
+      [8000, 8001]
 
-  stop = ->
-    promises = []
+  options.capabilities =
+    browserName: process.env['SAUCE_BROWSER'] || process.env['FRAN_BROWSER'] || 'firefox'
+    platform: process.env['SAUCE_PLATFORM']
+    version: process.env['SAUCE_version']
 
-    servers.forEach (server) ->
-      promises.push w.promise (resolve, reject) ->
-        server.close(resolve)
+  options.rootPath = process.cwd()
 
-    testCases.forEach (testCase) ->
-      promises.push w.promise (resolve, reject) ->
-        testCase.stop().then(resolve)
+  options.franPath = path.join(process.cwd(), process.env['FRAN_PATH']) ||
+                     path.join(process.cwd(), 'test', 'fran')
 
-    w.all(promises)
-
-  start: ->
-    app.use express.static(Project.publicPath)
-
-    process.on 'SIGINT', ->
-      stop().then(process.exit)
-
-    w.all Config.ports.map (port) ->
-      w.promise (resolve, reject) ->
-        servers.push app.listen(port, resolve)
-
-  use: (module) ->
-    modules.push(module)
-
-  stop: stop
-
-  load: (name) ->
-    testCase = TestCase(name)
-    testCase.mount(app)
-    testCases.push(testCase)
-
-    modules.forEach (module) ->
-      testCase.use(module)
-
-    testCase
+  factory = Factory(options)
+  factory.createServer()

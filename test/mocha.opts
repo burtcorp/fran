@@ -1,0 +1,4 @@
+--compilers coffee:coffee-script/register
+--require test/test_helpers
+--timeout 2000
+--slow 200

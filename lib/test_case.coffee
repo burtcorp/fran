@@ -1,68 +1,55 @@
 w = require('when')
-wd = require('wd')
-express = require('express')
-path = require('path')
 
-Config = require('./config')
-Project = require('./project')
-Token = require('./token')
+Evented = require('./evented')
 
-EventEmitter = require('events').EventEmitter
+module.exports = (name, capabilities, ports, project, feature, token, app, browser, path) ->
+  evented = Evented()
 
-module.exports = (name) ->
-  eventEmitter = new EventEmitter
+  isStarted = false
 
-  history = {}
-
-  project = Project(name)
-
-  app = express()
-  app.use express.static(project.publicPath)
-  app.set('views', project.viewsPath)
   app.get '/', (req, res) ->
     res.render 'index', name: name
-  app.locals.basedir = Project.viewsPath
-
-  browser = undefined
-
-  token = Token.generate()
 
   app: app
 
-  project: project
+  feature: feature
 
   mount: (server) ->
     server.use '/' + token, app
 
   use: (name) ->
-    module = require path.join(Project.supportPath, name)
+    module = require path.join(project.supportPath, name)
     module(@)
 
   start: ->
     w.promise (resolve, reject) ->
-      browser = wd.remote()
-      browser.init browserName: Config.browserName, (err) ->
-        if err
-          reject(err.message)
-        else
-          browser.get 'http://localhost:' + Config.ports[0] + '/' + token, resolve
+      if isStarted
+        resolve()
+      else
+        browser.init capabilities, (err) ->
+          if err
+            reject(err.message)
+          else
+            browser.get 'http://localhost:' + ports[0] + '/' + token, (err) ->
+              if err
+                reject(err.message)
+              else
+                isStarted = true
+
+                resolve()
 
   stop: ->
     w.promise (resolve, reject) ->
-      browser.quit (err) ->
-        if err
-          reject(err.message)
-        else
-          resolve()
+      if isStarted
+        browser.quit (err) ->
+          if err
+            reject(err.message)
+          else
+            isStarted = false
 
-  on: (event, callback) ->
-    (history[event] || []).forEach (args) ->
-      callback(args...)
+            resolve()
+      else
+        resolve()
 
-    eventEmitter.on(event, callback)
-
-  emit: (event, args...) ->
-    history[event] ?= []
-    history[event].push(args)
-
-    eventEmitter.emit(event, args...)
+  on: evented.on
+  emit: evented.emit
