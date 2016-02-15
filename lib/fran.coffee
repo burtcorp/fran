@@ -26,5 +26,7 @@ module.exports = (options = {}) ->
   options.franPath = path.join(process.cwd(), process.env['FRAN_PATH']) ||
                      path.join(process.cwd(), 'test', 'fran')
 
+  options.verbose = process.env['FRAN_VERBOSE']
+
   factory = Factory(options)
   factory.createServer()

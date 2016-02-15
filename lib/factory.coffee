@@ -7,6 +7,7 @@ Feature = require('./feature')
 wd = require('wd')
 path = require('path')
 express = require('express')
+morgan = require('morgan')
 
 module.exports = (options = {}) ->
   project: ->
@@ -15,6 +16,7 @@ module.exports = (options = {}) ->
   createServerApp: ->
     app = express()
     app.use express.static(@project().publicPath)
+    app.use(morgan('combined')) if options.verbose
     app
 
   createTestCaseApp: (name) ->
@@ -23,6 +25,7 @@ module.exports = (options = {}) ->
     app.use express.static(feature.publicPath)
     app.set('views', feature.viewsPath)
     app.locals.basedir = @project().viewsPath
+    app.use(morgan('combined')) if options.verbose
     app
 
   createFeature: (name) ->
