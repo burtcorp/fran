@@ -17,7 +17,7 @@ module.exports = (options = {}) ->
       [8000, 8001]
 
   options.capabilities =
-    browserName: process.env['SAUCE_BROWSER'] || process.env['FRAN_BROWSER'] || 'firefox'
+    browserName: process.env['SAUCE_BROWSER'] || process.env['FRAN_BROWSER'] || 'chrome'
     platform: process.env['SAUCE_PLATFORM']
     version: process.env['SAUCE_version']
 
