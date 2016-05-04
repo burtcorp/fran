@@ -30,7 +30,7 @@ module.exports = (name, capabilities, ports, project, feature, token, app, brows
           if err
             reject(err.message)
           else
-            browser.get 'http://localhost:' + ports[0] + '/' + token, (err) ->
+            browser.get 'http://localhost:' + ports[0] + '/' + token + '/', (err) ->
               if err
                 reject(err.message)
               else

@@ -75,7 +75,7 @@ describe 'TestCase', ->
     it 'retrieves url', (done) ->
       @browser.on 'init', (capabilities, callback) -> callback()
       @browser.on 'get', (url) ->
-        expect(url).to.equal('http://localhost:1/TOKEN')
+        expect(url).to.equal('http://localhost:1/TOKEN/')
         done()
       @testCase.start()
 
