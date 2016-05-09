@@ -19,7 +19,7 @@ module.exports = (options = {}) ->
   options.capabilities =
     browserName: process.env['SAUCE_BROWSER'] || process.env['FRAN_BROWSER'] || 'chrome'
     platform: process.env['SAUCE_PLATFORM']
-    version: process.env['SAUCE_version']
+    version: process.env['SAUCE_VERSION']
 
   options.rootPath = process.cwd()
 
