@@ -3,6 +3,7 @@ Project = require('./project')
 Token = require('./token')
 TestCase = require('./test_case')
 Feature = require('./feature')
+{Logger, NullLogger} = require('./logger')
 
 wd = require('wd')
 path = require('path')
@@ -10,6 +11,12 @@ express = require('express')
 morgan = require('morgan')
 
 module.exports = (options = {}) ->
+  logger =
+    if options.verbose
+      Logger()
+    else
+      NullLogger()
+
   project: ->
     Project(options.rootPath, options.franPath, path)
 
