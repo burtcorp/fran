@@ -3,12 +3,12 @@ path = require('path')
 Factory = require('./factory')
 
 module.exports = (options = {}) ->
-  if process.env['FRAN_SAUCE'] == '0'
-    options.sauce = false
-  else
-    options.sauce =
+  options.sauce =
+    if process.env['FRAN_SAUCE'] == '1'
       username: process.env['SAUCE_USERNAME']
       apiKey: process.env['SAUCE_API_KEY']
+    else
+      {}
 
   options.ports =
     if franPorts = process.env['FRAN_PORT']
