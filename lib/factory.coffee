@@ -3,6 +3,7 @@ Project = require('./project')
 Token = require('./token')
 TestCase = require('./test_case')
 Feature = require('./feature')
+Browser = require('./browser')
 {Logger, NullLogger} = require('./logger')
 
 wd = require('wd')
@@ -42,12 +43,7 @@ module.exports = (options = {}) ->
     Token.generate()
 
   createBrowser: ->
-    {username, apiKey} = options.sauce
-
-    if username && apiKey
-      wd.remote('ondemand.saucelabs.com', 80, username, apiKey)
-    else
-      wd.remote()
+    Browser(wd, logger, options.sauce)
 
   createTestCase: ->
     (name) =>
